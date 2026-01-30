@@ -3,7 +3,7 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@cl
 import Link from "next/link";
 import Image from "next/image";
 import { Button} from "./ui/button";
-import { ChevronDown, LayoutDashboard, StarsIcon } from "lucide-react";
+import { ChevronDown, FileText, GraduationCap, LayoutDashboard, PenBox, StarsIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
 const Header = () => {
@@ -20,7 +20,7 @@ const Header = () => {
        />
 
       </Link>
-      <div>
+      <div className="flex items-center space-x-2 nd:space-x-4">
         <SignedIn>
           <Link href={"/dashboard"}>
           <Button>
@@ -42,12 +42,27 @@ const Header = () => {
   <DropdownMenuContent>
     <DropdownMenuGroup>
       <DropdownMenuLabel>My Account</DropdownMenuLabel>
-      <DropdownMenuItem>Profile</DropdownMenuItem>
-      <DropdownMenuItem>Billing</DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link href={"/resume"} className="flex items-center gap-2">
+         <FileText className="h-4 w-4" />
+            <span>Build Resume</span>
+        </Link>
+      </DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link href={"/resume"} className="flex items-center gap-2">
+         <PenBox className="h-4 w-4" />
+            Cover Letter
+            </Link>
+      </DropdownMenuItem>
     </DropdownMenuGroup>
     <DropdownMenuGroup>
       <DropdownMenuSeparator />
-      <DropdownMenuItem>Team</DropdownMenuItem>
+      <DropdownMenuItem>
+        <Link href={"/resume"} className="flex items-center gap-2">
+         <GraduationCap className="h-4 w-4" />
+            Interview Prep
+            </Link>
+      </DropdownMenuItem>
       <DropdownMenuItem>Subscription</DropdownMenuItem>
     </DropdownMenuGroup>
   </DropdownMenuContent>
