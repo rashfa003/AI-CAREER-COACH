@@ -22,16 +22,18 @@ const Header = () => {
       </Link>
       <div>
         <SignedIn>
-          <Link href={"/dashboard"}>
-          <Button>
-            <LayoutDashboard className="h-4 w-4" />
-            <span className="ml-2 hidden lg:inline">Industry Insights </span>
-          </Button>
+          <Link href={"/dashboard"} legacyBehavior>
+            <Button asChild>
+              <a>
+                <LayoutDashboard className="h-4 w-4" />
+                <span className="ml-2 hidden lg:inline">Industry Insights </span>
+              </a>
+            </Button>
           </Link>
         </SignedIn>
 
          <DropdownMenu>
-  <DropdownMenuTrigger >
+  <DropdownMenuTrigger asChild>
     <Button>
             <StarsIcon className="h-4 w-4" />
             <span className=" ml-2 hidden lg:inline">Growth Tools</span>
