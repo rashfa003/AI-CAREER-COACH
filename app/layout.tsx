@@ -4,6 +4,8 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
 import ClerkProviderWrapper from "@/components/clerk-provider";
+import { ClerkProvider } from "@clerk/nextjs";
+import { dark } from "@clerk/themes";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -14,13 +16,12 @@ export const metadata: Metadata = {
   description: "",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }){
   return (
-     <ClerkProviderWrapper>
+     <ClerkProvider appearance={{
+      baseTheme: dark
+     }}
+     >
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.className} `}>
         <ThemeProvider
@@ -44,6 +45,6 @@ export default function RootLayout({
           </ThemeProvider>
       </body>
     </html>
-    </ClerkProviderWrapper>
+    </ClerkProvider>
   );
 }
