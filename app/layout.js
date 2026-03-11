@@ -2,9 +2,9 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import Header from "@/components/header";
-import ClerkProviderWrapper from "@/components/clerk-provider";
 import { ClerkProvider } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
+import { Toaster } from "@/components/ui/sonner";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -20,7 +20,7 @@ export default async function Layout({ children }) {
       }}
     >
       <html lang="en" suppressHydrationWarning>
-        <body className={`${inter.className} `}>
+        <body className={`${inter.className}`}>
           <ThemeProvider
             attribute="class"
             defaultTheme="dark"
@@ -30,6 +30,7 @@ export default async function Layout({ children }) {
             {/*header */}
             <Header />
             <main className="min-h-screen">{children}</main>
+            <Toaster richColors />
             {/* footer */}
 
             <footer className="bg-muted/50 py-12">

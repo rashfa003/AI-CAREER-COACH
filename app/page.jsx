@@ -1,7 +1,7 @@
 import Image from "next/image";
 
 import { Card, CardContent } from "@/components/ui/card";
-import HeroSection from "@/components/ui/hero";
+import HeroSection from "@/components/hero-section";
 import { features } from "@/data/features";
 import { howItWorks } from "@/data/howItWorks";
 import { testimonial } from "@/data/testimonial";
