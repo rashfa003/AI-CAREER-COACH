@@ -1,7 +1,7 @@
 "use server";
 
 import { db } from "@/lib/prisma";
-import { auth } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { generateAIInsights } from "./dashboard";
 
 export async function updateUser(data) {
@@ -65,30 +65,65 @@ export async function updateUser(data) {
   }
 }
 export async function getUserOnboardingStatus() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
-
-  const user = await db.user.findUnique({
-    where: {
-      clerkUserId: userId,
-    },
-  });
-
-  if (!user) throw new Error("User not found");
   try {
-    const userData = await db.user.findUnique({
+    const { userId } = await auth();
+    if (!userId) {
+      // User not logged in, return not onboarded
+      return { isOnboarded: false };
+    }
+
+    let user = await db.user.findUnique({
       where: {
         clerkUserId: userId,
       },
-      select: {
-        industry: true,
-      },
     });
-    return {
-      isOnboarded: !!userData?.industry,
-    };
+
+    // If user doesn't exist in DB, create them
+    if (!user) {
+      try {
+        const clerkUser = await currentUser();
+        
+        if (!clerkUser) {
+          return { isOnboarded: false };
+        }
+
+        const name =
+          [clerkUser.firstName, clerkUser.lastName].filter(Boolean).join(" ") || null;
+        const email = clerkUser.emailAddresses?.[0]?.emailAddress || null;
+
+        user = await db.user.create({
+          data: {
+            clerkUserId: userId,
+            name,
+            imageUrl: clerkUser.imageUrl || null,
+            email,
+            skills: [],
+          },
+        });
+      } catch (error) {
+        console.error("Error creating user:", error);
+        return { isOnboarded: false };
+      }
+    }
+
+    try {
+      const userData = await db.user.findUnique({
+        where: {
+          clerkUserId: userId,
+        },
+        select: {
+          industry: true,
+        },
+      });
+      return {
+        isOnboarded: !!userData?.industry,
+      };
+    } catch (error) {
+      console.error("Error checking onboarding status:", error.message);
+      return { isOnboarded: false };
+    }
   } catch (error) {
-    const errorMessage = ("Error checking onboarding status:", error.message);
-    throw new Error("Failed to fetch user onboarding status");
+    console.error("Error in getUserOnboardingStatus:", error);
+    return { isOnboarded: false };
   }
 }

@@ -75,8 +75,8 @@ useEffect(() => {
   const watchIndustry = watch("industry");
 
   return (
-    <div className="flex items-center justify-center bg-background">
-      <Card className="w-full max-w-lg mt-10 mx-2">
+    <div className="flex items-center justify-center min-h-screen bg-background py-10">
+      <Card className="w-full max-w-lg mx-2">
         <CardHeader>
           <CardTitle className="gradient-title text-4xl">
             Complete Your Profile
