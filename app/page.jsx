@@ -168,12 +168,12 @@ export default function Home() {
             </p>
           </div>
           <div className="max-w-6xl mx-auto">
-            <Accordion type="single" collapsible className="w-full">
+            <Accordion type="single" collapsible className="w-full" suppressHydrationWarning>
               {faqs.map((faq, index) => {
                 return (
-                  <AccordionItem key={index} value={`item-${index}`}>
-                    <AccordionTrigger>{faq.question}</AccordionTrigger>
-                    <AccordionContent>{faq.answer}</AccordionContent>
+                  <AccordionItem key={index} value={`item-${index}`} suppressHydrationWarning>
+                    <AccordionTrigger suppressHydrationWarning>{faq.question}</AccordionTrigger>
+                    <AccordionContent suppressHydrationWarning>{faq.answer}</AccordionContent>
                   </AccordionItem>
                 );
               })}

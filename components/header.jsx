@@ -54,7 +54,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
                     Cover Letter
                   </Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem asChild><Link href={"/Interview"} className="flex items-center gap-2">
+                <DropdownMenuItem asChild><Link href={"/interview"} className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4" />
                   Interview Prep
                 </Link>

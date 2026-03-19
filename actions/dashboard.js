@@ -57,36 +57,47 @@ Growth rate should be percentage.
 };
 
 export async function getIndustryInsights() {
-  const { userId } = await auth();
-  if (!userId) throw new Error("Unauthorized");
+  try {
+    const { userId } = await auth();
+    if (!userId) throw new Error("Unauthorized");
 
-  const user = await db.user.findUnique({
-    where: {
-      clerkUserId: userId,
-    },
-    include: {
-      industryInsight: true,
-    },
-  });
-
-  if (!user) throw new Error("User not found");
-
-  if (!user.industryInsight) {
-    const insights = await generateAIInsights(user.industry);
-
-    const industryInsight = await db.industryInsight.upsert({
+    const user = await db.user.findUnique({
       where: {
-        industry: user.industry,
+        clerkUserId: userId,
       },
-      update: {},
-      create: {
-        industry: user.industry,
-        ...insights,
+      include: {
+        industryInsight: true,
       },
     });
 
-    return industryInsight;
-  }
+    if (!user) throw new Error("User not found");
 
-  return user.industryInsight;
+    // If user hasn't selected an industry, return null
+    if (!user.industry) {
+      console.log("User has not selected an industry yet");
+      return null;
+    }
+
+    if (!user.industryInsight) {
+      const insights = await generateAIInsights(user.industry);
+
+      const industryInsight = await db.industryInsight.upsert({
+        where: {
+          industry: user.industry,
+        },
+        update: {},
+        create: {
+          industry: user.industry,
+          ...insights,
+        },
+      });
+
+      return industryInsight;
+    }
+
+    return user.industryInsight;
+  } catch (error) {
+    console.error("Error in getIndustryInsights:", error);
+    return null;
+  }
 }
