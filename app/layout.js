@@ -16,7 +16,7 @@ export const metadata = {
 
 export default async function Layout({ children }) {
   await checkUser();
-  
+
   return (
     <ClerkProvider
       appearance={{
@@ -25,12 +25,7 @@ export default async function Layout({ children }) {
     >
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.className}`}>
-          <ThemeProvider
-            attribute="class"
-            defaultTheme="dark"
-            enableSystem
-            disableTransitionOnChange
-          >
+          <ThemeProvider attribute="class" defaultTheme="dark">
             {/*header */}
             <Header />
             <main className="min-h-screen">{children}</main>

@@ -3,7 +3,7 @@ import { SignedIn, SignedOut, SignInButton, SignUpButton, UserButton } from "@cl
 import Link from "next/link";
 import Image from "next/image";
 import { Button } from "./ui/button";
-import { ChevronDown, FileText, GraduationCap, LayoutDashboard, PenBox, StarsIcon } from "lucide-react";
+import { Briefcase, ChevronDown, FileText, GraduationCap, LayoutDashboard, PenBox, StarsIcon } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "./ui/dropdown-menu";
 
  export default function Header() {
@@ -34,10 +34,10 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button>
-                  <StarsIcon className="h-4 w-4" />
-                  <span className="hidden md:block">Growth Tools</span>
-                  <ChevronDown className="h-4 w-4" />
+                <Button className="flex items-center gap-2 text-white hover:bg-white/10 px-3 py-2 rounded-md transition">
+                  <StarsIcon className="h-4 w-4 !text-white" />
+                  <span className="hidden md:block ! text-white">Growth Tools</span>
+                  <ChevronDown className="h-4 w-4 !text-white" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
@@ -54,10 +54,17 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
                     Cover Letter
                   </Link>
                 </DropdownMenuItem>
+
                 <DropdownMenuItem asChild><Link href={"/interview"} className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4" />
                   Interview Prep
                 </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href={"/job-tracker"} className="flex items-center gap-2">
+                    <Briefcase className="h-4 w-4" />
+                    Job Tracker
+                  </Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
