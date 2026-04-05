@@ -23,6 +23,7 @@ model User {
   coverLetter     CoverLetter[]
   resume          Resume?
   industryInsight IndustryInsight? @relation(fields: [industry], references: [industry])
+  jobApplications JobApplication[]
 }
 
 model Assessment {
@@ -80,6 +81,30 @@ model IndustryInsight {
   users             User[]
 
   @@index([industry])
+}
+
+model JobApplication {
+  id          String   @id @default(cuid())
+  userId      String
+  company     String?
+  role        String
+  status      String   @default("Applied")
+  //source      String?  @default("Manual")
+  link        String?
+  priority    String?
+  notes       String[]
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId])
+}
+
+model Activity {
+  id        String   @id @default(cuid())
+  message   String
+  createdAt DateTime @default(now())
 }
 
 enum DemandLevel {

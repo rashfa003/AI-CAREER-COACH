@@ -1,118 +1,88 @@
 "use client";
+
 import { useState } from "react";
 
-const initialJobs = [
-  {
-    company: "Google",
-    role: "Frontend Developer",
-    status: "Applied",
-    location: "Bangalore",
-    link: "#",
-  },
-];
+const statusOptions = ["Applied", "Interview", "Offer", "Rejected", "Accepted"];
 
-const JobList = () => {
-  const [jobs, setJobs] = useState(initialJobs);
-  const [filter, setFilter] = useState("All");
-  const [search, setSearch] = useState("");
+const priorityClasses = {
+  High: "bg-red-500",
+  Medium: "bg-yellow-500",
+  Low: "bg-green-500",
+};
 
-  const getStatusColor = (status) => {
-    switch (status) {
-      case "Applied":
-        return "text-gray-400";
-      case "Interview":
-        return "text-blue-400";
-      case "Offer":
-        return "text-green-400";
-      case "Rejected":
-        return "text-red-400";
-      default:
-        return "";
-    }
+const JobList = ({ jobs, onStatusChange, onAddNote }) => {
+  const [noteInputs, setNoteInputs] = useState({});
+
+  const handleNoteChange = (key, value) => {
+    setNoteInputs((prev) => ({ ...prev, [key]: value }));
   };
 
-  const deleteJob = (index) => {
-    const updated = jobs.filter((_, i) => i !== index);
-    setJobs(updated);
-  };
+  const handleNoteSubmit = (index) => {
+    const note = noteInputs[index]?.trim();
+    if (!note) return;
 
-  const filteredJobs = jobs.filter((job) => {
-    return (
-      (filter === "All" || job.status === filter) &&
-      (job.company.toLowerCase().includes(search.toLowerCase()) ||
-        job.role.toLowerCase().includes(search.toLowerCase()))
-    );
-  });
+    onAddNote(index, note);
+    setNoteInputs((prev) => ({ ...prev, [index]: "" }));
+  };
 
   return (
-    <div className="mt-6">
-      {/* 🔍 Search */}
-      <input
-        placeholder="Search company or role..."
-        className="w-full p-2 mb-4 rounded bg-gray-800 border border-gray-700"
-        value={search}
-        onChange={(e) => setSearch(e.target.value)}
-      />
+    <div className="mt-8">
+      <h2 className="text-xl font-bold mb-4"> Applied Jobs</h2>
 
-      {/* 🔘 Filters */}
-      <div className="flex gap-2 mb-4">
-        {["All", "Applied", "Interview", "Offer", "Rejected"].map((f) => (
-          <button
-            key={f}
-            onClick={() => setFilter(f)}
-            className="px-3 py-1 border rounded"
-          >
-            {f}
-          </button>
-        ))}
-      </div>
+      {jobs.length === 0 && <p className="text-gray-400">No jobs applied yet</p>}
 
-      {/* 📊 Stats */}
-      <div className="flex gap-4 mb-4 text-sm">
-        <p>Total: {jobs.length}</p>
-        <p>Applied: {jobs.filter(j => j.status === "Applied").length}</p>
-        <p>Interview: {jobs.filter(j => j.status === "Interview").length}</p>
-        <p>Offer: {jobs.filter(j => j.status === "Offer").length}</p>
-      </div>
+      {jobs.map((job, index) => (
+        <div key={job.id || index} className="border border-gray-700 p-4 rounded-lg mb-3 bg-gray-900">
+          <div className="flex justify-between items-start gap-2">
+            <div>
+              <h3 className="font-bold text-lg">{job.company}</h3>
+              <p>{job.role}</p>
+              <p className="text-sm text-gray-400">{job.location}</p>
+            </div>
+            <span className={`text-xs text-white px-2 py-1 rounded ${priorityClasses[job.priority] || "bg-gray-400"}`}>
+              {job.priority}
+            </span>
+          </div>
 
-      {/* 📋 Job Cards */}
-      {filteredJobs.length === 0 ? (
-        <p className="text-gray-400">No jobs found</p>
-      ) : (
-        filteredJobs.map((job, index) => (
-          <div
-            key={index}
-            className="border border-gray-700 p-4 mb-3 rounded-lg"
-          >
-            <h2 className="font-bold text-lg">{job.company}</h2>
-            <p>{job.role}</p>
-            <p className="text-sm text-gray-400">{job.location}</p>
+          <div className="mt-3 flex items-center gap-2">
+            <label className="text-sm text-gray-400">Status:</label>
+            <select
+              value={job.status}
+              onChange={(e) => onStatusChange(index, e.target.value)}
+              className="p-1 bg-gray-800 border border-gray-700 rounded"
+            >
+              {statusOptions.map((status) => (
+                <option key={status} value={status}>{status}</option>
+              ))}
+            </select>
+          </div>
 
-            <div className="flex justify-between items-center mt-2">
-              <span className={getStatusColor(job.status)}>
-                {job.status}
-              </span>
+          <div className="mt-4">
+            <h4 className="font-semibold">Notes</h4>
+            {(!job.notes || job.notes.length === 0) && <p className="text-sm text-gray-400">No notes yet.</p>}
+            {job.notes?.map((note, noteIndex) => (
+              <p key={noteIndex} className="text-sm text-gray-200 border border-gray-700 p-2 rounded mt-1">
+                {note}
+              </p>
+            ))}
 
-              <div className="flex gap-3">
-                <a
-                  href={job.link}
-                  target="_blank"
-                  className="text-blue-400 underline text-sm"
-                >
-                  View
-                </a>
-
-                <button
-                  onClick={() => deleteJob(index)}
-                  className="text-red-400 text-sm"
-                >
-                  Delete
-                </button>
-              </div>
+            <div className="mt-2 flex gap-2">
+              <input
+                value={noteInputs[index] || ""}
+                onChange={(e) => handleNoteChange(index, e.target.value)}
+                placeholder="Add a quick update"
+                className="flex-1 p-2 bg-gray-800 border border-gray-700 rounded text-white"
+              />
+              <button
+                onClick={() => handleNoteSubmit(index)}
+                className="px-3 py-1 bg-blue-600 hover:bg-blue-700 rounded text-white"
+              >
+                Add Note
+              </button>
             </div>
           </div>
-        ))
-      )}
+        </div>
+      ))}
     </div>
   );
 };
